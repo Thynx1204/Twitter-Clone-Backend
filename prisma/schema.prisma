@@ -63,5 +63,15 @@ model Retweet {
   user                   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId                 Int
   createdAt              DateTime       @default(now())
-  updatedAt             DateTime        @updatedAt
+  updatedAt              DateTime       @updatedAt
+}
+
+model Like {
+  id                     Int             @id @default(uuid())
+  tweet                  Tweet           @relation(fields: [postId], references: [id],  onDelete: Cascade)
+  tweetId                Int
+  user                   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                 Int
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
 }
