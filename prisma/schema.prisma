@@ -40,3 +40,18 @@ model Profile {
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 }
+
+model Tweet {
+  id                    Int             @id @default(uuid())
+  content               String          @db.VarChar(255)
+  image                 String?
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                Int
+  retweet               Retweet[]
+  likes                 Like[]
+  parentTweetId         Int?
+  parentTweet           Tweet?          @relation("TweetReplies", fields: [parentTweetId], references: [id])
+  replies               Tweet[]         @relation("TweetReplies", references: [id])
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+}
