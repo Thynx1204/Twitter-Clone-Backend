@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id                    Int           @id @default(uuid())
+  id                    String        @id @default(uuid())
   email                 String        @unique @db.VarChar(255)
   username              String        @unique @db.VarChar(30)
   password              String        @db.VarChar(64)
@@ -22,56 +22,56 @@ model User {
   tweets                Tweet[]
   retweets              Retweet[]
   likes                 Like[]
-  followers             User[]         @relation("UserFollows", references: [id])
-  followings            User[]         @relation("UserFollows", references: [id])
+  followers             User[]         @relation("UserFollows")
+  followings            User[]         @relation("UserFollows")
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 }
 
 model Profile {
-  id                    Int            @id @default(uuid())
+  id                    String         @id @default(uuid())
   name                  String         @db.VarChar(100)
   bio                   String?        @db.VarChar(255)
   img                   String?        @db.VarChar(4000)
   website               String?        @db.VarChar(100)
   dob                   DateTime?
   user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                Int            @unique
+  userId                String         @unique
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
 }
 
 model Tweet {
-  id                    Int             @id @default(uuid())
+  id                    String          @id @default(uuid())
   content               String          @db.VarChar(255)
   image                 String?
   user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                Int
+  userId                String
   retweet               Retweet[]
   likes                 Like[]
-  parentTweetId         Int?
+  parentTweetId         String?
   parentTweet           Tweet?          @relation("TweetReplies", fields: [parentTweetId], references: [id])
-  replies               Tweet[]         @relation("TweetReplies", references: [id])
+  replies               Tweet[]         @relation("TweetReplies")
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
 }
 
 model Retweet {
-  id                     Int            @id @default(uuid())
+  id                     String         @id @default(uuid())
   tweet                  Tweet          @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  tweetId                Int
+  tweetId                String
   user                   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                 Int
+  userId                 String
   createdAt              DateTime       @default(now())
   updatedAt              DateTime       @updatedAt
 }
 
 model Like {
-  id                     Int             @id @default(uuid())
-  tweet                  Tweet           @relation(fields: [postId], references: [id],  onDelete: Cascade)
-  tweetId                Int
+  id                     String          @id @default(uuid())
+  tweet                  Tweet           @relation(fields: [tweetId], references: [id],  onDelete: Cascade)
+  tweetId                String
   user                   User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId                 Int
+  userId                 String
   createdAt              DateTime        @default(now())
   updatedAt              DateTime        @updatedAt
 }
