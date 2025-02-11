@@ -15,3 +15,9 @@ export class UserNotFoundError extends Error {
     super(`User with email ${email} not found.`)
   }
 }
+
+export class IncorrectPasswordError extends Error {
+  constructor() {
+    super('Incorrect password!')
+  }
+}
