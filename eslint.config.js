@@ -8,6 +8,9 @@ const prettierPlugin = require("eslint-plugin-prettier");
 module.exports = [
   js.configs.recommended,
   {
+    env: {
+      "node": true
+    },
     files: ["**/*.ts", "**/*.js"],
     languageOptions: {
       parser: tsParser,
