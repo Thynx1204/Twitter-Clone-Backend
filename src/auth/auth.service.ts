@@ -11,6 +11,16 @@ class AuthService {
 
     return !!user
   }
+
+  public async usernameExist(username: string): Promise<boolean> {
+    const user: User | null = await userModel.findFirst({
+      where: {
+        username: username
+      }
+    })
+
+    return !!user
+  }
 }
 
 export default AuthService
