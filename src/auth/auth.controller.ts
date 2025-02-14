@@ -17,7 +17,7 @@ class AuthController implements Controller {
   }
 
   private initializeRoutes(): void {
-    this.router.post(`/${this.path}/register`, this.register)
+    this.router.post('/register', this.register)
   }
 
   public register = async (request: Request, response: Response) => {
@@ -40,7 +40,7 @@ class AuthController implements Controller {
           }
         })
 
-        response.status(400).json(jsonResponse('Invalid parameters', false, errorPayload))
+        response.status(400).json(jsonResponse(errorPayload[0].message, false))
       } else {
         const e = error as Error
         response.status(500).json(jsonResponse('An unexpected error occurs.', false))
