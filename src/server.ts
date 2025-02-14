@@ -1,4 +1,3 @@
-import 'module-alias/register'
 import 'dotenv/config'
 import validateEnv, { DEFAULT_ENV } from './utils/validateEnv'
 import App from './app'
