@@ -1,7 +1,7 @@
 import userModel from '../repositories/user.repository'
 import { User } from '@prisma/client'
 import { UserInterface, UserResponse } from '../types/user'
-import { UserDto, ProfileDto } from './register.dto'
+import { UserDto } from './register.dto'
 import { EmailExistsError, UsernameExistsError } from './auth.error'
 import { hashPassword } from '../utils/password.util'
 class AuthService {
@@ -27,7 +27,6 @@ class AuthService {
 
   public async register(payload: UserInterface): Promise<UserResponse> {
     UserDto.parse(payload.user)
-    ProfileDto.parse(payload.profile)
 
     if (await this.emailExist(payload.user.email)) {
       throw new EmailExistsError(payload.user.email)
@@ -38,12 +37,11 @@ class AuthService {
     }
 
     payload.user.password = await hashPassword(payload.user.password)
-
     const data = await userModel.create({
       data: {
         ...payload.user,
         profile: {
-          create: payload.profile
+          create: payload.user.profile
         }
       },
       include: {
