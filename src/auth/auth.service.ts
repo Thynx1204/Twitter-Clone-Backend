@@ -4,7 +4,7 @@ import { UserInterface, UserResponse } from '../types/user'
 import { UserDto } from './register.dto'
 import { EmailExistsError, UsernameExistsError } from './auth.error'
 import { hashPassword } from '../utils/password.util'
-import { format } from 'date-fns';
+import { format } from 'date-fns'
 class AuthService {
   public async emailExist(email: string): Promise<boolean> {
     const user: User | null = await userModel.findFirst({
@@ -44,7 +44,7 @@ class AuthService {
         profile: {
           create: {
             name: payload.user.profile.name,
-            dob: format(new Date(payload.user.profile.dob), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
+            dob: format(new Date(payload.user.profile.dob), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
           }
         }
       },
