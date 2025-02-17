@@ -23,6 +23,7 @@ class AuthController implements Controller {
 
   private initializeRoutes(): void {
     this.router.post('/register', this.register)
+    this.router.post('/login', this.login)
   }
 
   public register = async (request: Request, response: Response) => {
@@ -55,7 +56,7 @@ class AuthController implements Controller {
     }
   }
 
-  login = async (request: Request, response: Response) => {
+  public login = async (request: Request, response: Response) => {
     const payload: { email: string; password: string } = request.body
     let token: string
 
