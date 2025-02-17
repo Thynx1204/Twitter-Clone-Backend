@@ -4,7 +4,12 @@ import type { Request, Response } from 'express'
 import AuthService from './auth.service'
 import jsonResponse from '../utils/jsonResponse'
 import { UserInterface, UserResponse } from '../types/user'
-import { EmailExistsError, UsernameExistsError } from './auth.error'
+import {
+  EmailExistsError,
+  UsernameExistsError,
+  IncorrectPasswordError,
+  UserNotFoundError
+} from './auth.error'
 import { ZodError } from 'zod'
 import logger from '../utils/logger'
 
@@ -45,6 +50,29 @@ class AuthController implements Controller {
         const e = error as Error
         response.status(500).json(jsonResponse('An unexpected error occurs.', false))
         logger.error(e.message)
+        return
+      }
+    }
+  }
+
+  login = async (request: Request, response: Response) => {
+    const payload: { email: string; password: string } = request.body
+    let token: string
+
+    try {
+      token = await this.authService.login(payload)
+
+      response.status(200).json(jsonResponse('Successfully authenticated.', true, token))
+    } catch (error) {
+      if (error instanceof IncorrectPasswordError) {
+        response.status(403).json(jsonResponse('Incorrect password.', false))
+        return
+      } else if (error instanceof UserNotFoundError) {
+        response.status(404).json(jsonResponse('User not found.', false))
+        return
+      } else {
+        const e = error as Error
+        response.status(500).json(jsonResponse('An unexpected error occurs.', false))
         return
       }
     }
