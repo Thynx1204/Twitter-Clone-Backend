@@ -2,9 +2,16 @@ import userModel from '../repositories/user.repository'
 import { User } from '@prisma/client'
 import { UserInterface, UserResponse } from '../types/user'
 import { UserDto } from './register.dto'
-import { EmailExistsError, UsernameExistsError } from './auth.error'
+import {
+  EmailExistsError,
+  UsernameExistsError,
+  UserNotFoundError,
+  IncorrectPasswordError
+} from './auth.error'
 import { hashPassword } from '../utils/password.util'
 import { format } from 'date-fns'
+import { comparePassword } from '../utils/password.util'
+import { generateAccessToken } from '../utils/jwt.util'
 class AuthService {
   public async emailExist(email: string): Promise<boolean> {
     const user: User | null = await userModel.findFirst({
@@ -56,6 +63,22 @@ class AuthService {
     return {
       ...data.profile!,
       email: data.email
+    }
+  }
+
+  async login(payload: { email: string; password: string }) {
+    const user: User | null = await userModel.findFirst({
+      where: {
+        email: payload.email
+      }
+    })
+
+    if (!user) throw new UserNotFoundError(payload.email)
+
+    if (await comparePassword(payload.password, user.password)) {
+      return generateAccessToken(user.id)
+    } else {
+      throw new IncorrectPasswordError()
     }
   }
 }
